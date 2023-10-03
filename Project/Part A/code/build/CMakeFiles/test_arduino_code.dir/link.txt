@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/c++  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/test_arduino_code.dir/test_arduino_code.cpp.o CMakeFiles/test_arduino_code.dir/arduino_code.c.o -o test_arduino_code  lib/libgtest.a 
