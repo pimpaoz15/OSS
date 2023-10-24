@@ -43,7 +43,7 @@ struct res_msg
 {
     short int cmd;            // command to respond to
     short int status;         // boolean to state if execution went well
-    short int sunlight_on;    // boolean to state if sunlight is on
+    long int sunlight_on;     // boolean to state if sunlight is on
     float temperature;        // value of the temperature
     struct position position; // value of the position
 };
