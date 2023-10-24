@@ -1,6 +1,6 @@
 
 //-Uncomment to compile with arduino support
-// #define ARDUINO
+#define ARDUINO
 
 /**********************************************************
  *  INCLUDES
@@ -66,7 +66,7 @@ struct res_msg
 {
     short int cmd;            // command to respond to
     short int status;         // boolean to state if execution went well
-    short int sunlight_on;    // boolean to state if sunlight is on
+    long int sunlight_on;     // boolean to state if sunlight is on
     float temperature;        // value of the temperature
     struct position position; // value of the position
 };
@@ -236,7 +236,7 @@ void recv_res_msg()
     enum command cmd = last_res_msg.cmd;
 
     // update the state of the subsystems
-    if (cmd == SET_HEAT_CMD)
+    if (cmd == SET_HEAT_CMD && last_res_msg.status == 0)
     {
         // update the state of the heater
         heater_on = last_res_msg.status;
@@ -244,17 +244,17 @@ void recv_res_msg()
     else if (cmd == READ_SUN_CMD)
     {
         // update the state of the sunlight
-        sunlight_on = last_res_msg.data.sunlight_on;
+        sunlight_on = last_res_msg.sunlight_on;
     }
     else if (cmd == READ_TEMP_CMD)
     {
         // update the state of the temperature
-        temperature = last_res_msg.data.temperature;
+        temperature = last_res_msg.temperature;
     }
     else if (cmd == READ_POS_CMD)
     {
         // update the state of the position
-        position = last_res_msg.data.position;
+        position = last_res_msg.position;
     }
 
     // set the last response to no command to clean it up
@@ -324,6 +324,7 @@ void execute_cmd(enum command cmd)
 //-------------------------------------
 void *controller(void *arg)
 {
+
     // Endless loop
     while (1)
     {
@@ -333,6 +334,8 @@ void *controller(void *arg)
         control_temperature();
         execute_cmd(SET_HEAT_CMD);
         print_state();
+
+        // buld the Task Scheduler
     }
 }
 
