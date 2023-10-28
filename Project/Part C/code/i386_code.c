@@ -32,6 +32,21 @@
 #define MIN_TEMPERATURE -10.0
 #define AVG_TEMPERATURE 40.0
 
+// Define task periods and execution times
+#define TASK_A_PERIOD 5000
+#define TASK_B_PERIOD 2000
+#define TASK_C_PERIOD 2000
+#define TASK_D_PERIOD 2000
+#define TASK_E_PERIOD 4000
+#define TASK_F_PERIOD 4000
+
+#define TASK_A_EXECUTION_TIME 10
+#define TASK_B_EXECUTION_TIME 10
+#define TASK_C_EXECUTION_TIME 400
+#define TASK_D_EXECUTION_TIME 400
+#define TASK_E_EXECUTION_TIME 400
+#define TASK_F_EXECUTION_TIME 400
+
 // --------------------------------------
 // Types
 // --------------------------------------
@@ -322,44 +337,43 @@ void execute_cmd(enum command cmd)
 //-------------------------------------
 //-  Function: controller
 //-------------------------------------
+
 void *controller(void *arg)
 {
     unsigned long current_time = 0;
-    unsigned long taskA_period = 5000;
-    unsigned long taskB_period = 2000;
-    unsigned long taskC_period = 2000;
-    unsigned long taskD_period = 2000;
-    unsigned long taskE_period = 4000;
-    unsigned long taskF_period = 4000;
 
     while (1)
     {
         unsigned long start_time = getClock(); // Get current time in milliseconds
 
-        // Execute tasks according to their periods
-        if (current_time % taskA_period == 0)
+        // Check which tasks are ready to execute based on their periods
+        if (current_time % TASK_A_PERIOD == 0)
         {
             execute_cmd(READ_SUN_CMD);
         }
-        if (current_time % taskB_period == 0)
+        if (current_time % TASK_B_PERIOD == 0)
         {
             control_temperature();
         }
-        if (current_time % taskC_period == 0)
+        if (current_time % TASK_C_PERIOD == 0)
         {
             execute_cmd(READ_TEMP_CMD);
+            usleep(TASK_C_EXECUTION_TIME);
         }
-        if (current_time % taskD_period == 0)
+        if (current_time % TASK_D_PERIOD == 0)
         {
             execute_cmd(SET_HEAT_CMD);
+            usleep(TASK_D_EXECUTION_TIME);
         }
-        if (current_time % taskE_period == 0)
+        if (current_time % TASK_E_PERIOD == 0)
         {
             execute_cmd(READ_SUN_CMD);
+            usleep(TASK_E_EXECUTION_TIME);
         }
-        if (current_time % taskF_period == 0)
+        if (current_time % TASK_F_PERIOD == 0)
         {
             execute_cmd(READ_POS_CMD);
+            usleep(TASK_F_EXECUTION_TIME);
         }
 
         print_state();
@@ -367,13 +381,13 @@ void *controller(void *arg)
         // Calculate time taken by tasks and sleep to maintain the period
         unsigned long end_time = getClock();
         unsigned long execution_time = end_time - start_time;
-        if (execution_time < taskA_period)
+        if (execution_time < TASK_A_PERIOD)
         {
-            usleep(taskA_period - execution_time);
+            usleep(TASK_A_PERIOD - execution_time);
         }
 
         // Update current_time
-        current_time += taskA_period;
+        current_time += TASK_A_PERIOD;
     }
 }
 
