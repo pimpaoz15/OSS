@@ -324,18 +324,56 @@ void execute_cmd(enum command cmd)
 //-------------------------------------
 void *controller(void *arg)
 {
+    unsigned long current_time = 0;
+    unsigned long taskA_period = 5000;
+    unsigned long taskB_period = 2000;
+    unsigned long taskC_period = 2000;
+    unsigned long taskD_period = 2000;
+    unsigned long taskE_period = 4000;
+    unsigned long taskF_period = 4000;
 
-    // Endless loop
     while (1)
     {
-        execute_cmd(READ_SUN_CMD);
-        execute_cmd(READ_TEMP_CMD);
-        execute_cmd(READ_POS_CMD);
-        control_temperature();
-        execute_cmd(SET_HEAT_CMD);
+        unsigned long start_time = getClock(); // Get current time in milliseconds
+
+        // Execute tasks according to their periods
+        if (current_time % taskA_period == 0)
+        {
+            execute_cmd(READ_SUN_CMD);
+        }
+        if (current_time % taskB_period == 0)
+        {
+            control_temperature();
+        }
+        if (current_time % taskC_period == 0)
+        {
+            execute_cmd(READ_TEMP_CMD);
+        }
+        if (current_time % taskD_period == 0)
+        {
+            execute_cmd(SET_HEAT_CMD);
+        }
+        if (current_time % taskE_period == 0)
+        {
+            execute_cmd(READ_SUN_CMD);
+        }
+        if (current_time % taskF_period == 0)
+        {
+            execute_cmd(READ_POS_CMD);
+        }
+
         print_state();
 
-        // buld the Task Scheduler
+        // Calculate time taken by tasks and sleep to maintain the period
+        unsigned long end_time = getClock();
+        unsigned long execution_time = end_time - start_time;
+        if (execution_time < taskA_period)
+        {
+            usleep(taskA_period - execution_time);
+        }
+
+        // Update current_time
+        current_time += taskA_period;
     }
 }
 
