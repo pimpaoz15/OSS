@@ -337,7 +337,6 @@ void execute_cmd(enum command cmd)
 //-------------------------------------
 //-  Function: controller
 //-------------------------------------
-
 void *controller(void *arg)
 {
     unsigned long current_time = 0;
