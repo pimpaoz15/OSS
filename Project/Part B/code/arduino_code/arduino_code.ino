@@ -251,7 +251,6 @@ void get_temperature()
 /**********************************************************
  *  Function: get_position
  *********************************************************/
-
 void get_position()
 {
   // Calculate the time elapsed since the last orbit started (relative time)
@@ -278,7 +277,6 @@ void get_position()
 /**********************************************************
  *  Function: exec_cmd_msg
  *********************************************************/
-
 void exec_cmd_msg()
 {
   // Initialize the response message with default values

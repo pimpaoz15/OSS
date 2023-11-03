@@ -13,7 +13,6 @@ extern "C"
 /**********************************************************
  *  Test: control_temperature -> basic
  *********************************************************/
-
 TEST(test_control_temperature, basic)
 {
     // test 1
@@ -30,7 +29,6 @@ TEST(test_control_temperature, basic)
 /**********************************************************
  *  Test: set_heat_cmd
  *********************************************************/
-
 TEST(test_send_cmd_msg, set_heat_cmd)
 {
     // Save the original value of next_cmd_msg.cmd

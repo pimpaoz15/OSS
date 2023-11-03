@@ -107,11 +107,12 @@ void get_temperature()
 
     // Calculate the total power gained or lost by the satellite
     double total_power = HEAT_POWER_LOSS;
-    if (heater_on)
+
+    if (heater_on == 1)
     {
         total_power += HEATER_POWER;
     }
-    if (sunlight_on)
+    if (sunlight_on == 1)
     {
         total_power += SUNLIGHT_POWER;
     }
@@ -129,7 +130,6 @@ void get_temperature()
 /**********************************************************
  *  Function: get_position
  *********************************************************/
-
 void get_position()
 {
     // Calculate the time elapsed since the last orbit started (relative time)
@@ -156,11 +156,10 @@ void get_position()
 /**********************************************************
  *  Function: exec_cmd_msg
  *********************************************************/
-
 void exec_cmd_msg()
 {
     // Initialize the response message with default values
-    next_res_msg.cmd = last_cmd_msg.cmd;
+    last_cmd_msg.cmd = last_cmd_msg.cmd;
     next_res_msg.status = 0; // Default status is failure (0)
 
     switch (last_cmd_msg.cmd)
@@ -175,39 +174,42 @@ void exec_cmd_msg()
         {
             heater_on = 0;
         }
+        next_res_msg.cmd = SET_HEAT_CMD;
         // Set the status in the response message to indicate success
         next_res_msg.status = 1;
         break;
 
     case READ_SUN_CMD:
+        next_res_msg.cmd = READ_SUN_CMD;
         // Set the status in the response message to indicate success
         next_res_msg.status = 1;
         // Set the sunlight_on value in the response message
-        next_res_msg.data.sunlight_on = sunlight_on;
+        next_res_msg.sunlight_on = sunlight_on;
         break;
 
     case READ_TEMP_CMD:
-        // Set the status in the response message to indicate success
-        next_res_msg.status = 1;
         // Get the current temperature and update it in the response message
         get_temperature();
-        next_res_msg.data.temperature = temperature;
+        next_res_msg.cmd = READ_TEMP_CMD;
+        // Set the status in the response message to indicate success
+        next_res_msg.status = 1;
+        next_res_msg.temperature = temperature;
         break;
 
     case READ_POS_CMD:
-        // Set the status in the response message to indicate success
-        next_res_msg.status = 1;
         // Get the current position and update it in the response message
         get_position();
-        next_res_msg.data.position = position;
+        next_res_msg.cmd = READ_POS_CMD;
+        // Set the status in the response message to indicate success
+        next_res_msg.status = 1;
+        next_res_msg.position = position;
         break;
 
-    case NO_CMD:
     default:
-        // For NO_CMD or unknown commands, there is no specific response.
+        // This section is for NO_CMD or unknown commands
+        next_res_msg.cmd = NO_CMD;
+        last_cmd_msg.cmd = NO_CMD;
+        response_ready = true;
         break;
     }
-
-    // Set the last received command variable to NO_CMD
-    last_cmd_msg.cmd = NO_CMD;
 }
