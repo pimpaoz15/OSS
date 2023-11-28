@@ -53,7 +53,7 @@ struct res_msg
 {
   short int cmd;            // command to respond to
   short int status;         // boolean to state if execution went well
-  long int sunlight_on;     // boolean to state if sunlight is on
+  short int sunlight_on;    // boolean to state if sunlight is on
   float temperature;        // value of the temperature
   struct position position; // value of the position
 };
@@ -251,6 +251,7 @@ void get_temperature()
 /**********************************************************
  *  Function: get_position
  *********************************************************/
+
 void get_position()
 {
   // Calculate the time elapsed since the last orbit started (relative time)
@@ -277,6 +278,7 @@ void get_position()
 /**********************************************************
  *  Function: exec_cmd_msg
  *********************************************************/
+
 void exec_cmd_msg()
 {
   // Initialize the response message with default values
@@ -344,7 +346,7 @@ void read_sun_sensor()
   int lightValue = analogRead(A3);
 
   // Define a threshold value to determine if it's considered as sunlight
-  int sunlightThreshold = 400; // Adjust this value as needed
+  int sunlightThreshold = 500; // Adjust this value as needed
 
   // Check if the light value exceeds the threshold
   if (lightValue > sunlightThreshold)
@@ -369,7 +371,7 @@ void set_heater()
   {
     digitalWrite(ledPin, 1);
   }
-  else if (heater_on == 0)
+  else
   {
     // Turn the LED off (heater) if heater_on is false
     digitalWrite(ledPin, 0);
